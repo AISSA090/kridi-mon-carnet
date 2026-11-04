@@ -1,15 +1,4 @@
-// code main 
-// lors de l'appelle du fonction sauvegarder()
-// il faut appeler la fonction sauvegarder lors du fonction modifier 
 
-// const erreur = document.getElementById("erreur-stockage");
-// const result = sauvegarder(data)!
-// if (result){
-//     erreur.classList.add("hidden");
-//  } else {
-//     erreur.classList.remove("hidden");
-//     erreur.textContent = "Attention: Impossible de sauvegarder les données. Vos modifications risquent de ne pas etre sauvegarder!";
-// }
 
 // lors de l'appelle du fonction charger()
 

@@ -146,9 +146,11 @@ formClient.addEventListener('submit', function(event) {
         const plafondReel = parseFloat(change);
         const plafondEnCentimes = Math.round(plafondReel * 100);
         
-        ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes, client);
+        ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes, clients);
+
+        document.dispatchEvent(new Event("client-ajoute"));
         
-        console.log("Tableau des clients mis à jour :", client);
+        console.log("Tableau des clients mis à jour :", clients);
         
         dialogClient.close();
     }

@@ -1,6 +1,6 @@
 // code main 
 // lors de l'appelle du fonction sauvegarder()
-// il faut appeler la foncyion sauvegarder lors du fonction modifier 
+// il faut appeler la fonction sauvegarder lors du fonction modifier 
 
 // const erreur = document.getElementById("erreur-stockage");
 // const result = sauvegarder(data)!
@@ -51,7 +51,7 @@ export function charger(){
                 clients: [], 
                 operations: []
             },
-            erreur:false
+            erreur1:false
         }}
         const donnéesobject = JSON.parse(données);
         if( 
@@ -63,7 +63,7 @@ export function charger(){
         {
         return {
             data: donnéesobject,
-            erreur: false
+            erreur1: false
         };
         } else {
             throw new Error("Données invalides");
@@ -82,8 +82,21 @@ export function charger(){
             clients: [], 
             operations: []
         },
-        erreur: true
+        erreur1: true
     }}
 }
 
 
+// export function afficher(data){
+//     const donnees = localStorage.getItem("karni:v1");
+//     const data = donnees.clients;
+//     const liste = document.querySelector("#liste-clients");
+//     const modele = document.querySelector("#modele-client");
+//     liste.innerHTML = "";
+//     clients.forEach(client => {
+        
+//     });
+
+
+
+// }

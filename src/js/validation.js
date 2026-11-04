@@ -71,7 +71,7 @@ plafond.addEventListener('input', function() {
     }
 });
 
-const client = [];
+export const clients = [];
 
 const ilYa = (jours) => {
   const date = new Date();
@@ -91,7 +91,8 @@ function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
         creeLe: ilYa(0)
     };
 
-    tableauClients.push(nouveauClient); 
+    clients.push(nouveauClient);
+
 }
 
 function nettoyerErreurs() {
@@ -125,9 +126,18 @@ dialogClient.addEventListener('close', function() {
 formClient.addEventListener('submit', function(event) {
     event.preventDefault(); 
 
-    if (clientname.value.trim() === "" || plafond.value.trim() === "") {
-        alert("Le nom et le plafond sont obligatoires !"); 
-        return; 
+    if (clientname.value.trim() === "") {
+        clientnameerreu.classList.remove('hidden');
+        clientnameerreu.textContent = "Le nom est obligatoire";
+        clientname.setAttribute("aria-describedby", "client-nom-erreur");
+        clientname.setAttribute("aria-invalid", "true");
+    }
+
+    if (plafond.value.trim() === "") {
+        plafonderreu.classList.remove('hidden');
+        plafonderreu.textContent = "Le plafond est obligatoire";
+        plafond.setAttribute("aria-describedby", "client-plafond-erreur");
+        plafond.setAttribute("aria-invalid", "true");
     }
 
     const erreur = document.querySelectorAll('[aria-invalid="true"]');
@@ -141,7 +151,5 @@ formClient.addEventListener('submit', function(event) {
         console.log("Tableau des clients mis à jour :", client);
         
         dialogClient.close();
-    } else {
-        alert("Veuillez corriger les erreurs avant d'enregistrer.");
     }
 });

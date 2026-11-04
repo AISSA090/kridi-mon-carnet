@@ -1,18 +1,18 @@
-const btnajout = document.getElementById('nouveau-client');
 const btnimport = document.getElementById('importer');
 const btnexport = document.getElementById('exporter');
 const clientname = document.getElementById('client-nom');
 const clientnameerreu = document.getElementById('client-nom-erreur');
 const clienttelephone = document.getElementById('client-telephone');
 const clienttelephoneerreu = document.getElementById('client-telephone-erreur');
-const btnenrregistrer = document.getElementById('client');
-const nameregex = /^[a-zA-Z ]{2,40}$/;
+const nameregex = /^[a-zA-ZÀ-ÿ ]{2,40}$/;
 const phoneregex = /^0[567][0-9]{8}$/;
 const btnannuler = document.getElementById('client-annuler');
 const plafond = document.getElementById('client-plafond'); 
 const plafonderreu = document.getElementById('client-plafond-erreur');
 const plafondregex = /^[0-9]+([,.][0-9]{1,2})?$/;
-
+const dialogClient = document.getElementById('dialog-client');
+const btnajout = document.getElementById('nouveau-client');
+const formClient = document.getElementById('form-client');
 
 clientname.addEventListener('input', function() {
     if (clientname.value === "") {
@@ -41,7 +41,7 @@ clienttelephone.addEventListener('input', function() {
         clienttelephone.removeAttribute("aria-describedby");
     } else if (!phoneregex.test(clienttelephone.value)) {
         clienttelephoneerreu.classList.remove('hidden');
-        clienttelephoneerreu.textContent = "le nombre de telephone doit commencer avec 0(567) et avoir 10 nombre";
+        clienttelephoneerreu.textContent = "le nombre de telephone doit commencer avec (Ex 05, 06 , 07) et avoir 10 nombre";
         clienttelephone.setAttribute("aria-invalid", "true");
         clienttelephone.setAttribute("aria-describedby", "client-telephone-erreur"); 
     } else {
@@ -70,31 +70,40 @@ plafond.addEventListener('input', function() {
         plafond.removeAttribute("aria-describedby");
     }
 });
- const client=[]
+
+const client = [];
+
+const ilYa = (jours) => {
+  const date = new Date();
+  date.setDate(date.getDate() - jours);
+  const mois = String(date.getMonth() + 1).padStart(2, "0");
+  const jour = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${mois}-${jour}`;
+};
 
 export function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
     const nouveauClient = {
-        id: "c-"+ Date.now(), 
+        id: "c-" + Date.now(), 
         nom: nom,
         telephone: telephone,
         plafond: plafondEnCentimes,
         montant: 0,
-        creele:ilYa(0)
+        creeLe: ilYa(0)
     };
 
     tableauClients.push(nouveauClient); 
 }
-// btnenrregistrer.addEventListener('click',function(){
-//  const erreur=document.querySelectorAll('[aria-invalid="true"]')
+btnenrregistrer.addEventListener('click',function(){
+ const erreur=document.querySelectorAll('[aria-invalid="true"]')
 
-// if (erreur.length===0){
-//     const change=plafond.value.replace(',','.')
-//     const plafondReel = parseFloat(change);
-//     const plafondEnCentimes = Math.round(plafondReel * 100);
-//     ajouterClient(clientname.value,clienttelephone.value,plafondEnCentimes,client);
-// }
+if (erreur.length===0){
+    const change=plafond.value.replace(',','.')
+    const plafondReel = parseFloat(change);
+    const plafondEnCentimes = Math.round(plafondReel * 100);
+    ajouterClient(clientname.value,clienttelephone.value,plafondEnCentimes,client)
+}
 
-// });
+});
 const ilYa = (jours) => {
   const date = new Date();
   date.setDate(date.getDate() - jours);

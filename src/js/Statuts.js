@@ -18,6 +18,8 @@ const etat = document.getElementById('etat-vide')
 
   if (nombreDeClients > 0) {
     etat.classList.add('hidden')
+  } else {
+    etat.classList.remove('hidden')
   }
 
 

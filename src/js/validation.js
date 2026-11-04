@@ -13,6 +13,7 @@ const plafond = document.getElementById('client-plafond');
 const plafonderreu = document.getElementById('client-plafond-erreur');
 const plafondregex = /^[0-9]+([,.][0-9]{1,2})?$/;
 
+
 clientname.addEventListener('input', function() {
     if (clientname.value === "") {
         clientnameerreu.classList.add('hidden');
@@ -71,7 +72,7 @@ plafond.addEventListener('input', function() {
 });
  const client=[]
 
-function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
+export function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
     const nouveauClient = {
         id: "c-"+ Date.now(), 
         nom: nom,
@@ -83,17 +84,17 @@ function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
 
     tableauClients.push(nouveauClient); 
 }
-btnenrregistrer.addEventListener('click',function(){
- const erreur=document.querySelectorAll('[aria-invalid="true"]')
+// btnenrregistrer.addEventListener('click',function(){
+//  const erreur=document.querySelectorAll('[aria-invalid="true"]')
 
-if (erreur.length===0){
-    const change=plafond.value.replace(',','.')
-    const plafondReel = parseFloat(change);
-    const plafondEnCentimes = Math.round(plafondReel * 100);
-    ajouterClient(clientname.value,clienttelephone.value,plafondEnCentimes,client)
-}
+// if (erreur.length===0){
+//     const change=plafond.value.replace(',','.')
+//     const plafondReel = parseFloat(change);
+//     const plafondEnCentimes = Math.round(plafondReel * 100);
+//     ajouterClient(clientname.value,clienttelephone.value,plafondEnCentimes,client);
+// }
 
-});
+// });
 const ilYa = (jours) => {
   const date = new Date();
   date.setDate(date.getDate() - jours);

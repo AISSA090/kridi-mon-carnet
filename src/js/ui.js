@@ -8,14 +8,18 @@ const historique = document.getElementById("historique");
 const modeleOperation = document.getElementById("modele-operation");
 const historiqueVide = document.getElementById("historique-vide");
 
+function formaterMontant(montant) {
+    return (montant / 100).toFixed(2).replace(".", ",") + " MAD";
+}
+
 export function afficherFicheClient(client, operations) {
     ficheNom.textContent = client.nom;
     ficheTelephone.textContent = client.telephone;
-    fichePlafond.textContent = client.plafond;
+    fichePlafond.textContent = formaterMontant(client.plafond);
     const solde = calculerSoldeClient(client.id, operations);
-    ficheSolde.textContent = solde;
+    ficheSolde.textContent = formaterMontant(solde);
     const creditDisponible = calculerCreditDisponible(client, operations);
-    ficheDisponible.textContent = creditDisponible;
+    ficheDisponible.textContent = formaterMontant(creditDisponible);
 }
 
 export function afficherHistorique(operations) {
@@ -32,13 +36,11 @@ export function afficherHistorique(operations) {
         copy.querySelector(".operation-libelle").textContent = operation.libelle;
         copy.querySelector(".operation-date").textContent = operation.date;
         const opMontant = copy.querySelector(".operation-montant");
-        opMontant.textContent = operation.montant;
+        opMontant.textContent = formaterMontant(operation.montant);
         const ligne = copy.querySelector("li");
         ligne.dataset.operationId = operation.id;
         ligne.classList.add("operation-" + operation.type);
         historique.append(copy);
-        
-
     });
-
 }
+

@@ -14,7 +14,10 @@ if (resultat.erreur1) {
     erreur.textContent = "Impossible de lire les données!";
 }
 document.addEventListener("client-ajoute", function(){
+    console.log("1. Data au chargement :", data);
+    console.log("2. Clients avant push :", clients);
     data.clients.push(...clients);
+    console.log("3. Data après push :", data.clients);
     const sauvegarde = sauvegarder(data);
     const erreur = document.getElementById("erreur-stockage");
     if (sauvegarde){
@@ -24,5 +27,5 @@ document.addEventListener("client-ajoute", function(){
         erreur.classList.remove("hidden");
         erreur.textContent = "Attention: Impossible de sauvegarder les données. Vos modifications risquent de ne pas etre sauvegarder!";
     }
-
+     console.log("4. Résultat sauvegarde :", sauvegarde);
 })

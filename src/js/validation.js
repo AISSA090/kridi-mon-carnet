@@ -71,7 +71,7 @@ plafond.addEventListener('input', function() {
     }
 });
 
-const client = [];
+export const clients = [];
 
 const ilYa = (jours) => {
   const date = new Date();
@@ -81,7 +81,7 @@ const ilYa = (jours) => {
   return `${date.getFullYear()}-${mois}-${jour}`;
 };
 
-export function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
+function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
     const nouveauClient = {
         id: "c-" + Date.now(), 
         nom: nom,
@@ -91,23 +91,65 @@ export function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients)
         creeLe: ilYa(0)
     };
 
-    tableauClients.push(nouveauClient); 
-}
-btnenrregistrer.addEventListener('click',function(){
- const erreur=document.querySelectorAll('[aria-invalid="true"]')
+    clients.push(nouveauClient);
 
-if (erreur.length===0){
-    const change=plafond.value.replace(',','.')
-    const plafondReel = parseFloat(change);
-    const plafondEnCentimes = Math.round(plafondReel * 100);
-    ajouterClient(clientname.value,clienttelephone.value,plafondEnCentimes,client)
 }
 
+function nettoyerErreurs() {
+    const champs = [clientname, clienttelephone, plafond];
+    const erreurs = [clientnameerreu, clienttelephoneerreu, plafonderreu];
+
+    champs.forEach(champ => {
+        champ.removeAttribute("aria-invalid");
+        champ.removeAttribute("aria-describedby");
+    });
+    
+    erreurs.forEach(erreurTxt => {
+        erreurTxt.classList.add('hidden');
+        erreurTxt.textContent = "";
+    });
+}
+
+btnajout.addEventListener('click', function() {
+    dialogClient.showModal(); 
 });
-const ilYa = (jours) => {
-  const date = new Date();
-  date.setDate(date.getDate() - jours);
-  const mois = String(date.getMonth() + 1).padStart(2, "0");
-  const jour = String(date.getDate()).padStart(2, "0");
-  return `${date.getFullYear()}-${mois}-${jour}`;
-};
+
+btnannuler.addEventListener('click', function() {
+    dialogClient.close(); 
+});
+
+dialogClient.addEventListener('close', function() {
+    formClient.reset();
+    nettoyerErreurs(); 
+});
+
+formClient.addEventListener('submit', function(event) {
+    event.preventDefault(); 
+
+    if (clientname.value.trim() === "") {
+        clientnameerreu.classList.remove('hidden');
+        clientnameerreu.textContent = "Le nom est obligatoire";
+        clientname.setAttribute("aria-describedby", "client-nom-erreur");
+        clientname.setAttribute("aria-invalid", "true");
+    }
+
+    if (plafond.value.trim() === "") {
+        plafonderreu.classList.remove('hidden');
+        plafonderreu.textContent = "Le plafond est obligatoire";
+        plafond.setAttribute("aria-describedby", "client-plafond-erreur");
+        plafond.setAttribute("aria-invalid", "true");
+    }
+
+    const erreur = document.querySelectorAll('[aria-invalid="true"]');
+    if (erreur.length === 0) {
+        const change = plafond.value.replace(',', '.');
+        const plafondReel = parseFloat(change);
+        const plafondEnCentimes = Math.round(plafondReel * 100);
+        
+        ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes, client);
+        
+        console.log("Tableau des clients mis à jour :", client);
+        
+        dialogClient.close();
+    }
+});

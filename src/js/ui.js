@@ -1,4 +1,5 @@
 import { calculerSoldeClient, calculerCreditDisponible, trierOperations } from "./calculs.js";
+import { selectionnerClient } from "./state.js";
 const ficheNom = document.getElementById("fiche-nom");
 const ficheTelephone = document.getElementById("fiche-telephone");
 const ficheSolde = document.getElementById("fiche-solde");
@@ -13,6 +14,7 @@ function formaterMontant(montant) {
 }
 
 export function afficherFicheClient(client, operations) {
+    selectionnerClient(client);
     ficheNom.textContent = client.nom;
     ficheTelephone.textContent = client.telephone;
     fichePlafond.textContent = formaterMontant(client.plafond);

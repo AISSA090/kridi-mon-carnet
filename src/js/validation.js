@@ -81,7 +81,7 @@ const ilYa = (jours) => {
   return `${date.getFullYear()}-${mois}-${jour}`;
 };
 
-function ajouterClient(nom, telephone, plafondEnCentimes, tableauClients) {
+export function ajouterClient(nom, telephone, plafondEnCentimes) {
     const nouveauClient = {
         id: "c-" + Date.now(), 
         nom: nom,

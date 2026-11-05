@@ -309,3 +309,15 @@ formClient.addEventListener('submit', function(event) {
         dialogClient.close();
     }
 });
+const  modiffbtn=document.getElementById('modifier-client')
+const  deletebtn=document.getElementById('supprimer-client')
+const listeClients = document.getElementById('liste-clients');
+
+
+function supprimerClient(idClientASupprimer) {
+    const index = client.findIndex(c => c.id === idClientASupprimer);
+
+    if (index !== -1) {
+        client.splice(index, 1); 
+    }
+}

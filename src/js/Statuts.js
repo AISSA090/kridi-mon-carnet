@@ -1,4 +1,8 @@
 import { creerDemo } from './demo.js';
+import { sauvegarder, charger } from "./storage.js";
+const resultat = charger();
+const data = resultat.data;
+// const operations = resultat.operations;
 
 const nbClients = document.getElementById('nb-clients');
 const nbDette = document.getElementById('nb-en-dette');
@@ -38,7 +42,7 @@ export function statuts(clients) {
     nbRetard.textContent = retard
 }
 
-statuts(creerDemo().clients)
+statuts(data.clients)
 
 
 
@@ -63,7 +67,7 @@ let formattedTotal = (tota / 100).toFixed(2).replace('.', ',');
 toutal.textContent = formattedTotal + " MAD"
 }
 
-total(creerDemo().operations)
+total(data.operations)
 
 
 export function calculerSoldesClients(operations) {
@@ -90,25 +94,32 @@ export function calculerSoldesClients(operations) {
 
     return resultatArray;
 }
-const soldesCalcules = calculerSoldesClients(creerDemo().operations);
+const soldesCalcules = calculerSoldesClients(data.operations);
 console.log(soldesCalcules);
 
 let clientendix = 0;
 
-export function ajouterClient(clientData) {
+export function afficherClient(clientData) {
     const template = document.getElementById('modele-client');
     
     const clone = template.content.cloneNode(true);
+    
+    const soldeClient = soldesCalcules.find(
+    solde => solde.clientId === clientData.id
+) || {
+    solde: 0,
+    soldeFormate: "0,00 MAD"
+};
     
     clone.querySelector('.client-nom').textContent = clientData.nom;
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
     let chek = "";
-      if (clientData.creeLe > fulldate &&  soldesCalcules[clientendix].solde < clientData.plafond) {
+      if (clientData.creeLe > fulldate &&  soldeClient.solde < clientData.plafond) {
         chek = "En dette"
-      } else if (clientData.creeLe < fulldate &&  soldesCalcules[clientendix].solde < clientData.plafond) {
+      } else if (clientData.creeLe < fulldate &&  soldeClient.solde < clientData.plafond) {
         chek = " En retard"
-      } else if (soldesCalcules[clientendix].solde == clientData.plafond) {
+      } else if (soldeClient.solde == clientData.plafond) {
         chek = "Plafond atteint"
       } else  {
         chek = "À jour"
@@ -117,14 +128,12 @@ export function ajouterClient(clientData) {
 
     clone.querySelector('.client-badges').textContent = chek
     
-    clone.querySelector('.client-solde').textContent = soldesCalcules[clientendix].soldeFormate;
-    clientendix++;
+    clone.querySelector('.client-solde').textContent =
+    (clientData.plafond / 100).toFixed(2).replace('.', ',') + " MAD";
+
 
   
     const ulListe = document.getElementById('liste-clients');
     ulListe.appendChild(clone);
 }
 
-for (let i = 0; i < creerDemo().clients.length; i++) {
-  ajouterClient(creerDemo().clients[i])
-}

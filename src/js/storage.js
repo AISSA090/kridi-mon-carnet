@@ -17,7 +17,7 @@
 
 export function sauvegarder(data){
     try {
-        console.log("4. Résultat sauvegarde :", sauvegarder);
+        console.log("4. Résultat sauvegarde :", data);
         const données =JSON.stringify(data);
         localStorage.setItem("karni:v1", données);
         return true;

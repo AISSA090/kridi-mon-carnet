@@ -103,6 +103,7 @@ export function afficherClient(clientData) {
     const template = document.getElementById('modele-client');
     
     const clone = template.content.cloneNode(true);
+    clone.querySelector('li').dataset.clientId = clientData.id;
     
     const soldeClient = soldesCalcules.find(
     solde => solde.clientId === clientData.id
@@ -128,8 +129,7 @@ export function afficherClient(clientData) {
 
     clone.querySelector('.client-badges').textContent = chek
     
-    clone.querySelector('.client-solde').textContent =
-    (clientData.plafond / 100).toFixed(2).replace('.', ',') + " MAD";
+    clone.querySelector('.client-solde').textContent = soldeClient.soldeFormate;
 
 
   

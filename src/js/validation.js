@@ -299,25 +299,45 @@ formClient.addEventListener('submit', function(event) {
         plafond.setAttribute("aria-invalid", "true");
     }
 
-    const erreur = document.querySelectorAll('[aria-invalid="true"]');
+    const erreur = formClient.querySelectorAll('[aria-invalid="true"]');
     if (erreur.length === 0) {
         const change = plafond.value.replace(',', '.');
         const plafondReel = parseFloat(change);
         const plafondEnCentimes = Math.round(plafondReel * 100);
-        
+
         ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes);
+
+        document.dispatchEvent(new Event("client-ajoute"));
+
+        console.log("Tableau des clients mis à jour :", clients);
+
         dialogClient.close();
     }
 });
+
 const  modiffbtn=document.getElementById('modifier-client')
 const  deletebtn=document.getElementById('supprimer-client')
 const listeClients = document.getElementById('liste-clients');
 
-
 function supprimerClient(idClientASupprimer) {
-    const index = client.findIndex(c => c.id === idClientASupprimer);
-
+    const index = clients.findIndex(c => c.id === idClientASupprimer);
     if (index !== -1) {
-        client.splice(index, 1); 
+        clients.splice(index, 1); 
+        document.dispatchEvent(new CustomEvent("client-supprime", { detail: idClientASupprimer }));
     }
 }
+
+listeClients.addEventListener('click', function(event) {
+    const boutonClique = event.target.closest('button');
+    if (!boutonClique) return; 
+
+    const ligneClient = boutonClique.closest('li');
+    const idDuClient = ligneClient.dataset.clientId;
+
+    if (boutonClique.dataset.action === "supprimer-client") {
+        supprimerClient(idDuClient);
+    } 
+    else if (boutonClique.dataset.action === "modifier-client") {
+        document.dispatchEvent(new CustomEvent("client-modifie", { detail: idDuClient }));
+    }
+});

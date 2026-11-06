@@ -282,6 +282,17 @@ dialogClient.addEventListener('close', function() {
     nettoyerErreurs(); 
 });
 
+const clientIdInput = document.getElementById('client-id');
+const dialogTitre = document.getElementById('dialog-client-titre');
+const listeClients = document.getElementById('liste-clients');
+
+
+btnajout.addEventListener('click', function() {
+    clientIdInput.value = "";
+    dialogTitre.textContent = "Nouveau client";
+    dialogClient.showModal(); 
+});
+
 formClient.addEventListener('submit', function(event) {
     event.preventDefault(); 
 
@@ -305,26 +316,29 @@ formClient.addEventListener('submit', function(event) {
         const plafondReel = parseFloat(change);
         const plafondEnCentimes = Math.round(plafondReel * 100);
 
-        ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes);
+        const idExistant = clientIdInput.value;
 
-        document.dispatchEvent(new Event("client-ajoute"));
+        if (idExistant) {
+            document.dispatchEvent(new CustomEvent("client-modifie-sauvegarde", {
+                detail: {
+                    id: idExistant,
+                    nom: clientname.value.trim(),
+                    telephone: clienttelephone.value.trim(),
+                    plafond: plafondEnCentimes
+                }
+            }));
+        } else {
+            ajouterClient(clientname.value, clienttelephone.value, plafondEnCentimes);
+            document.dispatchEvent(new Event("client-ajoute"));
+        }
 
-        console.log("Tableau des clients mis à jour :", clients);
-
+        clientIdInput.value = ""; 
         dialogClient.close();
     }
 });
 
-const  modiffbtn=document.getElementById('modifier-client')
-const  deletebtn=document.getElementById('supprimer-client')
-const listeClients = document.getElementById('liste-clients');
-
 function supprimerClient(idClientASupprimer) {
-    const index = clients.findIndex(c => c.id === idClientASupprimer);
-    if (index !== -1) {
-        clients.splice(index, 1); 
-        document.dispatchEvent(new CustomEvent("client-supprime", { detail: idClientASupprimer }));
-    }
+    document.dispatchEvent(new CustomEvent("client-supprime", { detail: idClientASupprimer }));
 }
 
 listeClients.addEventListener('click', function(event) {

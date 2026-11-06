@@ -53,6 +53,43 @@ document.addEventListener("client-ajoute", function(){
      console.log("4. Résultat sauvegarde :", sauvegarde);
 })
 
+document.addEventListener("client-supprime", function(e) {
+    const id = e.detail;
+    const index = data.clients.findIndex(c => c.id === id);
+
+    if (index !== -1) {
+        data.clients.splice(index, 1); 
+        sauvegarder(data);
+        location.reload(); 
+    }
+});
+
+document.addEventListener("client-modifie", function(e) {
+    const id = e.detail;
+    const clientAModifier = data.clients.find(c => c.id === id);
+
+    if (clientAModifier) {
+        document.getElementById('dialog-client-titre').textContent = "Modifier le client";
+        document.getElementById('client-id').value = clientAModifier.id;
+        document.getElementById('client-nom').value = clientAModifier.nom;
+        document.getElementById('client-telephone').value = clientAModifier.telephone;
+        document.getElementById('client-plafond').value = (clientAModifier.plafond / 100).toString().replace('.', ',');
+        document.getElementById('dialog-client').showModal();
+    }
+});
+
+document.addEventListener("client-modifie-sauvegarde", function(e) {
+    const infos = e.detail;
+    const client = data.clients.find(c => c.id === infos.id);
+
+    if (client) {
+        client.nom = infos.nom;
+        client.telephone = infos.telephone;
+        client.plafond = infos.plafond;
+        sauvegarder(data);
+        location.reload(); 
+    }
+});
 
 // btnajout.addEventListener("click", function(){
 //     for (let i = 0; i < data.clients.length; i++) {

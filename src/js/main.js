@@ -3,8 +3,8 @@
 // (state.js, storage.js, validation.js, calculs.js, ui.js) que tu importes ici.
 
 import { sauvegarder, charger } from "./storage.js";
-import {ajouterClient, clients } from "./validation.js";
-import {afficherClient } from "./Statuts.js";
+import { afficherClient } from "./Statuts.js";
+import { clients } from "./state.js";
 
 // const btnajout = document.getElementById('nouveau-client');
 

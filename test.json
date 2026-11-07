@@ -1,0 +1,54 @@
+ 
+{
+  "app": "karni",
+  "version": 1,
+  "clients": [
+    {
+      "id": "c-demo-1",
+      "nom": "Fatima Zahra Alaoui",
+      "telephone": "0612345678",
+      "plafond": 150000,
+      "creeLe": "2026-09-06"
+    },
+    {
+      "id": "c-demo-2",
+      "nom": "Youssef Benali",
+      "telephone": "0661234567",
+      "plafond": 80000,
+      "creeLe": "2026-09-16"
+    },
+    {
+      "id": "c-demo-3",
+      "nom": "Khadija Aït Lahcen",
+      "telephone": "",
+      "plafond": 50000,
+      "creeLe": "2026-10-06"
+    }
+  ],
+  "operations": [
+    {
+      "id": "o-demo-1",
+      "clientId": "c-demo-1",
+      "type": "achat",
+      "montant": 4550,
+      "libelle": "Lait, pain, œufs",
+      "date": "2026-11-02"
+    },
+    {
+      "id": "o-demo-2",
+      "clientId": "c-demo-1",
+      "type": "achat",
+      "montant": 5000,
+      "libelle": "Bonbonne de gaz",
+      "date": "2026-11-03"
+    },
+    {
+      "id": "o-demo-3",
+      "clientId": "c-demo-1",
+      "type": "achat",
+      "montant": 3275,
+      "libelle": "Thé, sucre",
+      "date": "2026-11-04"
+    }
+  ]
+}

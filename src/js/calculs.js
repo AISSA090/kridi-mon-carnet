@@ -22,7 +22,11 @@ export function calculerCreditDisponible(client, operations) {
 export function trierOperations(operations) {
     let copyOperation = [...operations];
     copyOperation.sort((a,b) => {
-        return new Date(b.date) - new Date(a.date);
+        const difference = new Date(b.date) - new Date(a.date);
+        if (difference !== 0) {
+            return difference;
+        }
+        return Number(b.id.slice(2)) - Number(a.id.slice(2));
     });
     return copyOperation;
 }

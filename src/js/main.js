@@ -5,6 +5,7 @@
 import { sauvegarder, charger } from "./storage.js";
 import { afficherClient } from "./Statuts.js";
 import { clients, operations } from "./state.js";
+import { creerDemo } from "./demo.js";
 
 // const btnajout = document.getElementById('nouveau-client');
 
@@ -100,3 +101,305 @@ document.addEventListener("client-modifie-sauvegarde", function(e) {
 // })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const confirmationTitre = document.getElementById("confirmation-titre");
+const confirmationMessage = document.getElementById("confirmation-message");
+const confirmationDetails = document.getElementById("confirmation-details");
+const btnChargerDemo = document.getElementById("charger-demo");
+btnChargerDemo.addEventListener("click", function() {
+    confirmationTitre.textContent = "Charger la démo";
+    confirmationMessage.textContent = "Voulez-vous remplacer les données actuelles par les données de démonstration ?";
+    confirmationDetails.textContent = "6 clients et 15 opérations seront chargés";
+    dialogConfirmation.dataset.action = "charger-demo";
+    dialogConfirmation.showModal();
+});
+
+const dialogConfirmation = document.getElementById("dialog-confirmation");
+const listeClients = document.getElementById("liste-clients");
+dialogConfirmation.addEventListener("close", function() {
+    if (dialogConfirmation.returnValue === "valider" && dialogConfirmation.dataset.action === "charger-demo") {
+        const demo = creerDemo();
+        data.clients = demo.clients;
+        data.operations = demo.operations;
+        operations.length = 0;
+        operations.push(...demo.operations);
+        const sauvegarde = sauvegarder(data);
+        if (sauvegarde === true) {
+            listeClients.textContent = "";
+            location.reload();
+        }
+        else {
+            erreur.classList.remove("hidden");
+            erreur.textContent = "Impossible de sauvegarder les données de démonstration";
+        }
+    }
+    else if (dialogConfirmation.returnValue === "valider" && dialogConfirmation.dataset.action === "vider-carnet") {
+        data.clients = [];
+        data.operations = [];
+        clients.length = 0;
+        operations.length = 0;
+        const sauvegarde = sauvegarder(data);
+        if (sauvegarde === true) {
+            listeClients.textContent = "";
+            location.reload();
+        } 
+        else {
+            erreur.classList.remove("hidden");
+            erreur.textContent = "Impossible de vider le carnet.";
+        }
+    }
+});
+
+const btnViderCarnet = document.getElementById("vider-carnet");
+btnViderCarnet.addEventListener("click", function() {
+    confirmationTitre.textContent = "Vider le carnet";
+    confirmationMessage.textContent = "Voulez-vous vraiment supprimer tous les clients et toutes les opérations ?";
+    confirmationDetails.textContent = "Cette action supprimera toutes les données du carnet";
+    dialogConfirmation.dataset.action = "vider-carnet";
+    dialogConfirmation.showModal();
+});

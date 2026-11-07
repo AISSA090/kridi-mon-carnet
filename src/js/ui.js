@@ -16,11 +16,6 @@ const dialogConfirmation = document.getElementById("dialog-confirmation");
 const confirmationTitre = document.getElementById("confirmation-titre");
 const confirmationMessage = document.getElementById("confirmation-message");
 const confirmationDetails = document.getElementById("confirmation-details");
-const confirmationValider = document.getElementById("confirmation-valider");
-const formOperation = document.getElementById("form-operation");
-const operationMontant = document.getElementById("operation-montant");
-const operationDate = document.getElementById("operation-date");
-const operationLibelle = document.getElementById("operation-libelle");
 
 function formaterMontant(montant) {
     return (montant / 100).toFixed(2).replace(".", ",") + " MAD";
@@ -79,11 +74,15 @@ historique.addEventListener("click", (event) => {
     confirmationMessage.textContent = "Voulez-vous vraiment supprimer cette opération ?";
     confirmationDetails.textContent = operation.libelle;
     dialogConfirmation.dataset.operationId = operationId;
+    dialogConfirmation.dataset.action = "supprimer-operation";
     dialogConfirmation.showModal();
 });
 
 dialogConfirmation.addEventListener("close", () => {
         if (dialogConfirmation.returnValue !== "valider") {
+            return;
+        }
+        if (dialogConfirmation.dataset.action !== "supprimer-operation") {
             return;
         }
         const operationId = dialogConfirmation.dataset.operationId;

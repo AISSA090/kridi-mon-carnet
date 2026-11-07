@@ -1,5 +1,6 @@
 import { creerDemo } from './demo.js';
 import { sauvegarder, charger } from "./storage.js";
+import { afficherFicheClient, afficherHistorique } from "./ui.js";
 const resultat = charger();
 const data = resultat.data;
 // const operations = resultat.operations;
@@ -113,6 +114,11 @@ export function afficherClient(clientData) {
 };
     
     clone.querySelector('.client-nom').textContent = clientData.nom;
+    clone.querySelector(".client-nom").addEventListener("click", () => {
+      afficherFicheClient(clientData, data.operations);
+      afficherHistorique(data.operations);
+      document.getElementById("fiche-client").showModal();
+    });
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
     let chek = "";

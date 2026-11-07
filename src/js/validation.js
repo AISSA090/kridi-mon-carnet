@@ -1,6 +1,7 @@
 import { clients, operations, clientSelectionne } from "./state.js";
 import { calculerSoldeClient, calculerCreditDisponible } from "./calculs.js";
 import { afficherFicheClient, afficherHistorique } from "./ui.js";
+import { sauvegarder, charger } from "./storage.js";
 
 const btnimport = document.getElementById('importer');
 const btnexport = document.getElementById('exporter');
@@ -55,6 +56,15 @@ function validerMontant() {
     return !invalide;
 }
 operationMontant.addEventListener("input", validerMontant);
+
+function initialiserDateOperation() {
+    const aujourdHui = new Date();
+    const annee = aujourdHui.getFullYear();
+    const mois = String(aujourdHui.getMonth() + 1).padStart(2, "0");
+    const jour = String(aujourdHui.getDate()).padStart(2, "0");
+    operationDate.value = `${annee}-${mois}-${jour}`;
+}
+initialiserDateOperation();
 
 function validerDate() {
     const date = operationDate.value;
@@ -165,9 +175,15 @@ formOperation.addEventListener("submit", function(event) {
         date: operationDate.value
     }
     operations.push(operation);
+    const resultat = charger();
+    const data = resultat.data;
+    data.operations = [...operations];
+    const sauvegarde = sauvegarder(data);
+    if (!sauvegarde) {
+        console.error("Impossible de sauvegarder les opérations");
+    }
     afficherFicheClient(clientSelectionne, operations);
     afficherHistorique(operations);
-    console.log("Les champs sont valides !");
 });
 
 clientname.addEventListener('input', function() {

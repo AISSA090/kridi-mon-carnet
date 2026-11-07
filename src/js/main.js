@@ -4,13 +4,15 @@
 
 import { sauvegarder, charger } from "./storage.js";
 import { afficherClient } from "./Statuts.js";
-import { clients } from "./state.js";
+import { clients, operations } from "./state.js";
 
 // const btnajout = document.getElementById('nouveau-client');
 
 
 const resultat = charger();
 const data = resultat.data;
+
+operations.push(...data.operations);
 
 const erreur = document.getElementById("erreur-stockage");
 

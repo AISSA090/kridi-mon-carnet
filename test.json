@@ -12,14 +12,14 @@
     },
     {
       "id": "c-demo-2",
-      "nom": "Youssef Benali",
+      "nom": "Amine Benali",
       "telephone": "0661234567",
       "plafond": 80000,
       "creeLe": "2026-09-16"
     },
     {
       "id": "c-demo-3",
-      "nom": "Khadija Aït Lahcen",
+      "nom": "Halima Aït Lahcen",
       "telephone": "",
       "plafond": 50000,
       "creeLe": "2026-10-06"

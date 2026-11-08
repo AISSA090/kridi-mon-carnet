@@ -403,3 +403,16 @@ btnViderCarnet.addEventListener("click", function() {
     dialogConfirmation.dataset.action = "vider-carnet";
     dialogConfirmation.showModal();
 });
+const btnexport=document.getElementById('exporter')
+btnexport.addEventListener('click',function(){
+  data.exporteLe = new Date().toISOString();
+  const texteJson = JSON.stringify(data, null, 2);
+  const fichierBlob = new Blob([texteJson], { type: "application/json" });
+  const urlFichier = URL.createObjectURL(fichierBlob);
+  const lienTelechargement = document.createElement('a');
+  lienTelechargement.href=urlFichier
+  const dateDuJour = new Date().toISOString().split('T')[0];
+  lienTelechargement.download="karni-"+dateDuJour+".json"
+  lienTelechargement.click()
+  URL.revokeObjectURL(urlFichier)
+});

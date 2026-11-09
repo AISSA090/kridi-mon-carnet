@@ -121,24 +121,21 @@ export function afficherClient(clientData) {
     });
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
-    let chek = "";
-      if (clientData.creeLe > fulldate &&  clientData.solde < clientData.plafond) {
-        chek = "En dette"
-      } else if (clientData.creeLe < fulldate &&  clientData.solde < clientData.plafond) {
-        chek = " En retard"
-      } else if (clientData.solde == clientData.plafond) {
-        chek = "Plafond atteint"
-      } else  {
-        chek = "À jour"
-      }
+   let chek = "";
+    if (clientData.creeLe > fulldate && soldeClient.solde > 0 && soldeClient.solde < clientData.plafond) {
+        chek = "En dette";
+    } else if (clientData.creeLe < fulldate && soldeClient.solde > 0 && soldeClient.solde < clientData.plafond) {
+        chek = "En retard";
+    } else if (soldeClient.solde >= clientData.plafond && clientData.plafond > 0) {
+        chek = "Plafond atteint";
+    } else {
+        chek = "À jour";
+    }
+
+    clone.querySelector('.client-badges').textContent = chek;
+    clone.querySelector('.client-solde').textContent = soldeClient.soldeFormate;
       
 
-    clone.querySelector('.client-badges').textContent = chek
-    
-    clone.querySelector('.client-solde').textContent = clientData.soldef;
-    
-
-  
     const ulListe = document.getElementById('liste-clients');
     ulListe.appendChild(clone);
 }

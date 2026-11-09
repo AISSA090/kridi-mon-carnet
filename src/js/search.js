@@ -1,138 +1,95 @@
-import { creerDemo } from './demo.js';
-import { calculerSoldesClients, ajouterClient } from  './Statuts.js';
+import { charger } from './storage.js';
+import { calculerSoldesClients, afficherClient } from './Statuts.js';
 
-const soldesCalcules = calculerSoldesClients(creerDemo().operations);
-const op = []
+const resultat = charger();
+const data = resultat.data;
+const soldesCalcules = calculerSoldesClients(data.operations);
 
-for (let i = 0; i < creerDemo().clients.length; i++) {
-    let a = ``;
-    for (let k = 0; k < creerDemo().operations.length; k++) {
-        if (creerDemo().operations[k].clientId === `c-demo-${i +1}`) {
-            a = creerDemo().operations[k].date
+const filter = document.getElementById('filtre-statut');
+const tri = document.getElementById('tri');
+const recherche = document.getElementById('recherche');
+const list = document.getElementById('liste-clients');
+const aucunResultat = document.getElementById('etat-aucun-resultat');
+const btnReinitialiser = document.getElementById('reinitialiser-filtres');
+
+const date = new Date();
+date.setDate(date.getDate() - 30);
+const mois = String(date.getMonth() + 1).padStart(2, "0");
+const jour = String(date.getDate()).padStart(2, "0");
+const fulldate = `${date.getFullYear()}-${mois}-${jour}`;
+
+const cli = data.clients.map(client => {
+    const infoSolde = soldesCalcules.find(s => s.clientId === client.id) || {
+        solde: 0,
+        soldeFormate: "0,00 MAD"
+    };
+
+    const opsClient = data.operations.filter(op => op.clientId === client.id);
+    let derniereDate = "";
+    opsClient.forEach(op => {
+        if (op.date > derniereDate) {
+            derniereDate = op.date;
         }
+    });
+
+    return {
+        ...client,
+        solde: infoSolde.solde,
+        soldef: infoSolde.soldeFormate,
+        lastop: derniereDate
+    };
+});
+
+// 2. Filter, sort, and display
+function mettreAJourListe() {
+    const mot = recherche.value.toLowerCase().trim();
+    const statutChoisi = filter.value;
+    const triChoisi = tri.value;
+
+    let resultats = cli.filter(client => {
+        const correspondNom = client.nom.toLowerCase().includes(mot);
+
+        let correspondStatut = true;
+        if (statutChoisi === "en-dette") {
+            correspondStatut = client.creeLe > fulldate && client.solde > 0 && client.solde < client.plafond;
+        } else if (statutChoisi === "en-retard") {
+            correspondStatut = client.creeLe < fulldate && client.solde > 0 && client.solde < client.plafond;
+        } else if (statutChoisi === "a-jour") {
+            correspondStatut = client.solde === 0;
+        }
+
+        return correspondNom && correspondStatut;
+    });
+
+    if (triChoisi === "recent") {
+        resultats.sort((a, b) => new Date(b.lastop || 0) - new Date(a.lastop || 0));
+    } else if (triChoisi === "solde") {
+        resultats.sort((a, b) => b.solde - a.solde);
+    } else {
+        resultats.sort((a, b) => a.nom.localeCompare(b.nom));
     }
-    op.push(a)
-}
-const cli = []
 
-for (let i = 0; i < creerDemo().clients.length; i++) {
-    const arr = {
-            id: creerDemo().clients[i].id, 
-            nom: creerDemo().clients[i].nom,
-            telephone: creerDemo().clients[i].telephone,
-            plafond: creerDemo().clients[i].plafond,
-            creeLe: creerDemo().clients[i].creeLe,
-            solde: soldesCalcules[i].solde,
-            soldef: soldesCalcules[i].soldeFormate,
-            lastop: op[i]
-        }
-    cli.push(arr)
+    list.innerHTML = "";
+    resultats.forEach(client => {
+        afficherClient(client);
+    });
+
+    if (cli.length > 0 && resultats.length === 0) {
+        aucunResultat.classList.remove("hidden");
+    } else {
+        aucunResultat.classList.add("hidden");
+    }
 }
 
+recherche.addEventListener('input', mettreAJourListe);
+filter.addEventListener('change', mettreAJourListe);
+tri.addEventListener('change', mettreAJourListe);
 
-const filter = document.getElementById('filtre-statut')
-const list = document.getElementById('liste-clients')
-
-  const date = new Date();
-  date.setDate(date.getDate() - 30);
-  const mois = String(date.getMonth() + 1).padStart(2, "0");
-  const jour = String(date.getDate()).padStart(2, "0");
-  
-  const fulldate = `${date.getFullYear()}-${mois}-${jour}`;
-
-for (let i = 0; i < creerDemo().clients.length; i++) {
-    ajouterClient(cli[i])
+if (btnReinitialiser) {
+    btnReinitialiser.addEventListener('click', () => {
+        recherche.value = "";
+        filter.value = "tous";
+        tri.value = "nom";
+        mettreAJourListe();
+    });
 }
-
-export function filtreparStatus(status) {
-    filter.addEventListener('change', ()=> {
-        list.innerHTML = ""
-        if ( filter.value == "en-dette") {
-            for (let i = 0; i < status.length; i++) {
-                if (status[i].creeLe > fulldate &&  status[i].solde < status[i].plafond) {
-                  ajouterClient(status[i])
-                 }
-            }
-        } else if (filter.value == "en-retard") {
-            for (let i = 0; i < creerDemo().clients.length; i++) {
-                if (status[i].creeLe < fulldate &&  status[i].solde < status[i].plafond) {
-                    ajouterClient(status[i])
-                } 
-            }
-        }  else if (filter.value == "a-jour") {
-            for (let i = 0; i < status.length; i++) {
-                 if (status[i].solde === 0) {
-                   ajouterClient(status[i])
-                 } 
-            }
-        } else {
-            for (let i = 0; i < status.length; i++) {
-                ajouterClient(status[i])
-            }
-        }
-    })
-    
-}
-filtreparStatus(cli)
-
-
-const tri = document.getElementById('tri')
-
-export function triparnom(tris) {
-    
-    tri.addEventListener('change', ()=> {
-        list.innerHTML = ""
-        const dateSort = [...tris].sort((a,b) => new Date(b.lastop) - new Date(a.lastop))
-        const nameSort = [...tris].sort((a,b) => a.nom.localeCompare(b.nom))
-        const soldeSorte = [...tris].sort((a,b) => b.solde - a.solde)
-    
-        
-        if (tri.value === "recent") {
-             for (let i = 0; i < dateSort.length; i++) {
-                ajouterClient(dateSort[i])
-            }
-        } else if (tri.value === "solde") {
-            for (let i = 0; i < soldeSorte.length; i++) {
-                ajouterClient(soldeSorte[i])
-            }
-        } else {
-             for (let i = 0; i < nameSort.length; i++) {
-                ajouterClient(nameSort[i])
-            }
-        }
-    })
-}
-triparnom(cli)
-
-const icune = document.getElementById('etat-aucun-resultat')
-
-
-const recherche = document.getElementById('recherche')
-
-export function search(parnom) {
-    recherche.addEventListener('input', ()=> {
-        const mot = recherche.value.toLowerCase().trim()
-    
-        let resolt = parnom.filter(cl => {
-            const nom = cl.nom.toLowerCase();
-    
-            return nom.includes(mot)
-        })
-    
-        list.innerHTML = ""
-          for (let i = 0; i < resolt.length; i++) {
-                ajouterClient(resolt[i])
-            }
-
-        
-    })
-    
-}
-
-search(cli)
-
-
-
-
-
-

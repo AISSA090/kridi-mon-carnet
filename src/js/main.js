@@ -42,14 +42,11 @@ document.addEventListener("client-ajoute", function(){
 
     const erreur = document.getElementById("erreur-stockage");
 
-    if (sauvegarde){
-        nouveauClients.forEach(client => {
-            afficherClient(client);
-        });
+    if (sauvegarde) {
         clients.length = 0;
         erreur.classList.add("hidden");
-        
-     } else {
+        location.reload();
+    } else {
         erreur.classList.remove("hidden");
         erreur.textContent = "Attention: Impossible de sauvegarder les données. Vos modifications risquent de ne pas etre sauvegarder!";
     }

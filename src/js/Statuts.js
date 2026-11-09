@@ -104,11 +104,11 @@ export function ajouterClient(clientData) {
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
     let chek = "";
-      if (clientData.creeLe > fulldate &&  soldesCalcules[clientendix].solde < clientData.plafond) {
+      if (clientData.creeLe > fulldate &&  clientData.solde < clientData.plafond) {
         chek = "En dette"
-      } else if (clientData.creeLe < fulldate &&  soldesCalcules[clientendix].solde < clientData.plafond) {
+      } else if (clientData.creeLe < fulldate &&  clientData.solde < clientData.plafond) {
         chek = " En retard"
-      } else if (soldesCalcules[clientendix].solde == clientData.plafond) {
+      } else if (clientData.solde == clientData.plafond) {
         chek = "Plafond atteint"
       } else  {
         chek = "À jour"
@@ -117,14 +117,11 @@ export function ajouterClient(clientData) {
 
     clone.querySelector('.client-badges').textContent = chek
     
-    clone.querySelector('.client-solde').textContent = soldesCalcules[clientendix].soldeFormate;
-    clientendix++;
+    clone.querySelector('.client-solde').textContent = clientData.soldef;
+    
 
   
     const ulListe = document.getElementById('liste-clients');
     ulListe.appendChild(clone);
 }
 
-for (let i = 0; i < creerDemo().clients.length; i++) {
-  ajouterClient(creerDemo().clients[i])
-}

@@ -1,4 +1,9 @@
 import { creerDemo } from './demo.js';
+import { sauvegarder, charger } from "./storage.js";
+import { afficherFicheClient, afficherHistorique } from "./ui.js";
+const resultat = charger();
+const data = resultat.data;
+// const operations = resultat.operations;
 
 const nbClients = document.getElementById('nb-clients');
 const nbDette = document.getElementById('nb-en-dette');
@@ -38,7 +43,7 @@ export function statuts(clients) {
     nbRetard.textContent = retard
 }
 
-statuts(creerDemo().clients)
+statuts(data.clients)
 
 
 
@@ -63,7 +68,7 @@ let formattedTotal = (tota / 100).toFixed(2).replace('.', ',');
 toutal.textContent = formattedTotal + " MAD"
 }
 
-total(creerDemo().operations)
+total(data.operations)
 
 
 export function calculerSoldesClients(operations) {
@@ -90,17 +95,30 @@ export function calculerSoldesClients(operations) {
 
     return resultatArray;
 }
-const soldesCalcules = calculerSoldesClients(creerDemo().operations);
+const soldesCalcules = calculerSoldesClients(data.operations);
 console.log(soldesCalcules);
 
 let clientendix = 0;
 
-export function ajouterClient(clientData) {
+export function afficherClient(clientData) {
     const template = document.getElementById('modele-client');
     
     const clone = template.content.cloneNode(true);
+    clone.querySelector('li').dataset.clientId = clientData.id;
+    
+    const soldeClient = soldesCalcules.find(
+    solde => solde.clientId === clientData.id
+) || {
+    solde: 0,
+    soldeFormate: "0,00 MAD"
+};
     
     clone.querySelector('.client-nom').textContent = clientData.nom;
+    clone.querySelector(".client-nom").addEventListener("click", () => {
+      afficherFicheClient(clientData, data.operations);
+      afficherHistorique(data.operations);
+      document.getElementById("fiche-client").showModal();
+    });
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
     let chek = "";

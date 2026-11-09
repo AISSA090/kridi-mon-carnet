@@ -77,28 +77,28 @@ fichier.addEventListener("change", function () {
                 return;   
             }
             donneesImportees = data;
-            message.textContent = ("Ce fichier contient " + data.clients.length + " clients et " + data.operations.length + " operations, Voulez vous les importer?");
+            document.getElementById("confirmation-titre").textContent = "Importer un fichier";
+            details.innerHTML = "";
+            message.textContent = "Ce fichier contient " + data.clients.length + " clients et " + data.operations.length + " opérations. Voulez-vous les importer ?";
+            dialog.dataset.action = "importer";
             dialog.showModal();
     }
     reader.readAsText(file);
 });
 
 dialog.addEventListener("close", function(){
-    if(dialog.returnValue === "valider" && donneesImportees !== null){
+    if (dialog. dataset.action !== "importer") return;
+
+    if (dialog.returnValue === "valider" && donneesImportees !== null) {
         const resultat = sauvegarder(donneesImportees);
-        if (resultat){
-            console.log("importation reussie")
+        if (resultat) {
             document.dispatchEvent(new CustomEvent("donnees-importees", {
-            detail: donneesImportees
-        }));
-        }else {
-            console.log("erreur lors de l'importation!!")
+                detail: donneesImportees
+            }));
         }
     }
-    else {
-        console.log("l'utilisateur a refusé l'importation");
-    }
-})
+    donneesImportees = null;
+});
 
 
 

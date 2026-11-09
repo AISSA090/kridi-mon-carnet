@@ -56,6 +56,18 @@ document.addEventListener("client-ajoute", function(){
      console.log("4. Résultat sauvegarde :", sauvegarde);
 })
 
+    document.addEventListener("donnees-importees", function(e) {
+    console.log("Données importées :", e.detail);
+    data.clients = e.detail.clients;
+    data.operations = e.detail.operations;
+
+    location.reload();
+});
+
+
+
+
+
 document.addEventListener("client-supprime", function(e) {
     const id = e.detail;
     const index = data.clients.findIndex(c => c.id === id);

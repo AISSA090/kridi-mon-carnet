@@ -122,11 +122,11 @@ export function afficherClient(clientData) {
     clone.querySelector('.client-telephone').textContent = clientData.telephone || "Aucun téléphone";
 
     let chek = "";
-      if (clientData.creeLe > fulldate &&  soldeClient.solde < clientData.plafond) {
+      if (clientData.creeLe > fulldate &&  clientData.solde < clientData.plafond) {
         chek = "En dette"
-      } else if (clientData.creeLe < fulldate &&  soldeClient.solde < clientData.plafond) {
+      } else if (clientData.creeLe < fulldate &&  clientData.solde < clientData.plafond) {
         chek = " En retard"
-      } else if (soldeClient.solde == clientData.plafond) {
+      } else if (clientData.solde == clientData.plafond) {
         chek = "Plafond atteint"
       } else  {
         chek = "À jour"
@@ -135,8 +135,8 @@ export function afficherClient(clientData) {
 
     clone.querySelector('.client-badges').textContent = chek
     
-    clone.querySelector('.client-solde').textContent = soldeClient.soldeFormate;
-
+    clone.querySelector('.client-solde').textContent = clientData.soldef;
+    
 
   
     const ulListe = document.getElementById('liste-clients');
